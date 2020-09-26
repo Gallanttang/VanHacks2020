@@ -6,19 +6,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, cross_val_score, cross_validate, GridSearchCV
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
+import nltk
 import gensim
-from gensim.utils import lemmatize
-from gensim.models import LdaModel
-from gensim.models.wrappers import LdaMallet
-from gensim.corpora import Dictionary
-from nltk.corpus import stopwords
-from nltk import sent_tokenize
+import spacy
 import re
 
 
 #setting variables
 #APIKEY = HEADERS['Authorization']
-FILE_PATH = 'data/reviews.csv'
+FILE_PATH = 'data/vancouver_reviews.csv'
 #assuming that the data features will be: ['businessID', 'userID', 'rating', 'review', 'time']
 
 #retrieving data
@@ -26,6 +22,8 @@ FILE_PATH = 'data/reviews.csv'
 # print(reviews_df.shape)
 # X_raw = reviews_df['review']
 # y_raw = reviews_df['ratings']
+
+GOOD_RATING = 4
 y_raw = ['3.4','4', 'hella 3', '2 a3glsk2']
 
 
@@ -62,24 +60,80 @@ for s in y_raw:
             l.append(float(t))
         except ValueError:
             pass
-    y.append(l[0]>=4)
+    y.append(l[0]>=GOOD_RATING)
+print(y)
  
- #proprocessing the corpus
-X = []
-for i in X_raw:
-    X.append(gensim.utils.simple_preprocess(i, deacc=True, min_len=3))
-bigram = gensim.models.Phrases(X_raw)
-stops = set(stopwords.words('english'))
+# preprocessing the corpus
+print("te")
+spacy.load('en')
 
-def process_texts(texts):
-    texts = [[word for word in line if word not in stops] for line in texts]
-    texts = [bigram[line] for line in texts]
-    texts = [[word.decode("utf-8").split('/')[0] for word in lemmatize(' '.join(line), allowed_tags=re.compile('(NN)'), min_length=5)] for line in texts]
-    return texts
+from spacy.lang.en import English
+parser = English()
 
-train_texts = process_texts(X_raw)
+def tokenize(text):
+    lda_tokens = []
+    tokens = parser(text)
+    for token in tokens:
+        if token.orth_.isspace():
+            continue
+        elif token.like_url:
+            lda_tokens.append('URL')
+        elif token.orth_.startswith('@'):
+            lda_tokens.append('SCREEN_NAME')
+        else:
+            lda_tokens.append(token.lower_)
+    return lda_tokens
 
-dictionary = Dictionary(train_texts)
-corpus = [dictionary.doc2bow(text) for text in train_texts]
-print(Dictionary)
-print(corpus)
+nltk.download('wordnet')
+from nltk.corpus import wordnet as wn
+
+def get_lemma(word):
+    lemma = wn.morphy(word)
+    if lemma is None:
+        return word
+    else:
+        return lemma
+    
+from nltk.stem.wordnet import WordNetLemmatizer
+def get_lemma2(word):
+    return WordNetLemmatizer().lemmatize(word)
+
+nltk.download('stopwords')
+en_stop = set(nltk.corpus.stopwords.words('english'))
+
+def prepare_text_for_lda(text):
+    tokens = tokenize(text)
+    tokens = [token for token in tokens if len(token) > 4]
+    tokens = [token for token in tokens if token not in en_stop]
+    tokens = [get_lemma(token) for token in tokens]
+    return tokens
+
+import random
+text_data = []
+for line in X_raw:
+    tokens = prepare_text_for_lda(line)
+    if random.random() > .99:
+        print(tokens)
+        text_data.append(tokens)
+
+#from https://towardsdatascience.com/topic-modelling-in-python-with-nltk-and-gensim-4ef03213cd21
+
+
+# X = []
+# for i in X_raw:
+#     X.append(gensim.utils.simple_preprocess(i, deacc=True, min_len=3))
+# bigram = gensim.models.Phrases(X_raw)
+# stops = set(stopwords.words('english'))
+
+# def process_texts(texts):
+#     texts = [[word for word in line if word not in stops] for line in texts]
+#     texts = [bigram[line] for line in texts]
+#     texts = [[word.decode("utf-8").split('/')[0] for word in lemmatize(' '.join(line), allowed_tags=re.compile('(NN)'), min_length=5)] for line in texts]
+#     return texts
+
+# train_texts = process_texts(X_raw)
+
+# dictionary = Dictionary(train_texts)
+# corpus = [dictionary.doc2bow(text) for text in train_texts]
+# print(Dictionary)
+# print(corpus)

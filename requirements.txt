@@ -6,3 +6,6 @@ numpy==1.19.2
 gensim==3.8.0
 scikit-learn==0.23.2
 nltk==3.0.5
+Flask==1.1.2
+Jinja2==2.11.2
+spaCy==2.3

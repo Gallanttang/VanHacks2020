@@ -3,7 +3,7 @@ import numpy as np
 import requests
 import json
 import csv
-
+import config
 # restaurant_name = []
 # restaurant_add = []
 # restaurant_cuisine = []
@@ -26,7 +26,7 @@ import csv
 # lat = []
 # lon = []
 HEADERS = {
-    'Authorization': 'Bearer oaLwG_o_UYW2jDX6plx8ON5aa1SlH_TOe7_TQ-UKNQJkMUUvwMPIDF1CKbhmjhoQc14a6D_Ui_OFSMRHafDHAR0bW55OBBzhONjXwH2Dph190Ey-QwV6Q3Esmn5vX3Yx',
+    'Authorization': 'Bearer ' + config.YELP_AUTH_KEY,
     'content-type': 'applications/json',
     'ratelimit-dailylimit': '5000'
 }

@@ -6,6 +6,7 @@ import json
 import csv
 import html
 import time
+import config
 
 def transform_link(x):
     return str(x) + "/review_feed"
@@ -22,10 +23,8 @@ with open('data/vancouver_reviews.csv', "w") as csv_file:
     csv_writer.writerow(['business_id', 'user_id', 'rating', 'comment', 'feedback', "time_uploaded"])
     tracking = 0
     for row in df['review_url']: 
-        if tracking > 2:
-            break
         tracking += 1 
-        print(row)
+        print(tracking, row)
         ENDPOINT = row
         PARAMETERS = {
             'rl': 'en',
