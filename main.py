@@ -36,17 +36,21 @@ headers = {
 }
 
 for j in range(-5, 5):
-    long.append(float(-122.4194 + float(j/100)))
-    lat.append(float(37.7749 + float(j/100)))
+    long.append(float(-122.4194 + float(j/200)))
+    lat.append(float(37.7749 + float(j/200)))
 long = np.unique(np.array(long))
 lat = np.unique(np.array(lat))
 
 with open('data/Restaurant_links.csv', mode='w') as csv_file:
     csv_writer = csv.writer(csv_file, delimiter=',')
     results = {}
+    counter = 0
     for j in long:
         for h in lat:
             for i in range(20):
+                if counter > 4999:
+                    break;
+                counter += 1
                 try:
                     offset = 50 * i
                     link = "https://api.yelp.com/v3/businesses/search?latitude=" \
@@ -60,6 +64,5 @@ with open('data/Restaurant_links.csv', mode='w') as csv_file:
                         break
                     for business in json_loaded['businesses']:
                         csv_writer.writerow([business['id'], business['name']])
-                    time.sleep(20)
                 except:
                     continue
