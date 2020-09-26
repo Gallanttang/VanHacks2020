@@ -64,10 +64,8 @@ for s in y_raw:
 print(y)
  
 # preprocessing the corpus
-print("te")
-spacy.load('en')
-
 from spacy.lang.en import English
+
 parser = English()
 
 def tokenize(text):
@@ -112,6 +110,7 @@ import random
 text_data = []
 for line in X_raw:
     tokens = prepare_text_for_lda(line)
+    
     if random.random() > .99:
         print(tokens)
         text_data.append(tokens)
