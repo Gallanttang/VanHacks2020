@@ -1,0 +1,5 @@
+BeautifulSoup4==4.9.1
+Selenium==3.141.0
+Pandas==1.1.2
+requests==2.24.0
+numpy==1.19.2
