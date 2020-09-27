@@ -1,4 +1,4 @@
-# VanHacks2020
+# VanHacks2020 Reviewsy (FINALISTS)
 This application was created to be showcased at VanHacks 2020, a annual hackathon organized by TTT Studios around VSW dedicated to helping those helping our community. 
 The team consists of three members: Jon Kim, Yen Ching Tan, and Gallant Tang.
 We worked using python for both front and back end development on VSCode with live share due to social distancing policies as a result of covid.
