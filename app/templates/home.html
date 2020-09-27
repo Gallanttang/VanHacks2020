@@ -14,13 +14,14 @@
         <h1 id="title"> AutoMATES </h1>
         <p> We help the BC Restaurant and Foodservices Association with providing valuable information and exclusive opportunities. </p>
     </div>
-    <form method='POST' action=''>
+    <form method='POST' action='{{ url_for('results') }}'>
         <div class="dropdown">
             <select name='restaurants'>
                 {% for restaurant in restaurants %}
                     <option value="{{restaurant}}"> {{restaurant}} </option>
                 {% endfor %}
             </select>
+            <button class="search_button"> Search </button>
         </div>
 
     </form>

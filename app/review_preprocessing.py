@@ -1,11 +1,5 @@
 import numpy as np
 import pandas as pd
-from sklearn.dummy import DummyClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split, cross_val_score, cross_validate, GridSearchCV
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.pipeline import Pipeline
 import nltk
 import gensim
 from gensim import corpora
