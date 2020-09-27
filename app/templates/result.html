@@ -1,24 +1,41 @@
 <html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="results.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='results.css')}}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <body>
-    <h1> Your review results </h1>
+   <div class="top"> 
+      <button type="button" class="button home"> Home </button>
+      <button type="button" class="button about"> About Us </button>
+   </div>
+   
+   <div class="heading"> 
+      <h1> Your review results </h1>
     <p> 
-       [some nice paragraph] 
+       Your restaurant is great!
     </p>
-    <h2> Words associated with your business </h2>
-    <button type="button"> Great </button>
-    <button type="button"> Service </button>
-    <button type="button"> Quality </button>
-    <button type="button"> Long </button>
-    <button type="button"> Far Away </button>
+   </div>
+   <div class="input-group"> 
+      <h2> Words associated with your business </h2>
+    <span class="badge badge-pill"> Great </span>
+    <span class="badge badge-pill"> Service </span>
+    <span class="badge badge-pill"> Quality </span>
+    <span class="badge badge-pill"> Memorable </span>
+    <span class="badge badge-pill"> Celebration </span>
     <h2> Average star rating </h2>
+   </div>
+
+   <div class="rating">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+   </div>
+
+  
+   <div class="icon">
+   <span class="badge badge-default"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
+   </div>
+
 </body>
-
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-
 </html>  

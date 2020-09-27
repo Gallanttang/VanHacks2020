@@ -22,7 +22,7 @@ FILE_PATH = 'data/vancouver_reviews.csv'
 reviews_df = pd.read_csv(FILE_PATH, index_col=0, delimiter='\t')
 print(reviews_df.shape)
 X_raw = reviews_df['comment']
-X_raw.apply(lambda x: x.replace('<br>', ''))
+X_raw.apply(lambda x: x.replace('<br>', '')).apply(lambda x: x.replace('<br', '')).apply(lambda x: x.replace('br>', ''))
 y_raw = reviews_df['rating']
 
 GOOD_RATING = 4
@@ -80,8 +80,8 @@ def prepare_text_for_lda(text):
 import random
 text_data = []
 for line in X_raw:
-    
     tokens = prepare_text_for_lda(line)
-    if random.random() > 0.999:
+    if random.random() > -1:
         #print(tokens)
-    text_data.append(tokens)
+        text_data.append(tokens)
+

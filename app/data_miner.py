@@ -3,7 +3,7 @@ import numpy as np
 import requests
 import json
 import csv
-from app import config
+import config
 
 # restaurant_name = []
 # restaurant_add = []
@@ -47,7 +47,7 @@ PARAMETERS = {
 
 with open('data/Restaurant_links.csv', mode='w') as csv_file:
     csv_writer = csv.writer(csv_file, delimiter=',')
-    csv_writer.writerow(['id', 'name', 'url', 'city', 'zip_code', 'biz_rating', 'categories', 'price'])
+    csv_writer.writerow(['id', 'name', 'url', 'city', 'zip_code', 'biz_rating', 'categories', 'price', 'hours_open'])
     for i in range(20):
         try:
             PARAMETERS['offset'] = i * 50
@@ -60,12 +60,18 @@ with open('data/Restaurant_links.csv', mode='w') as csv_file:
                 price = ""
                 if 'price' in business.keys():
                     price = business['price']
+                hours = []
+                r = requests.get(url="https://api.yelp.com/v3/businesses/"+str(business['id']), headers=HEADERS)
+                business_dets = json.loads(r.text)
+                if 'hours' in business_dets.keys():
+                    hours = business_dets['hours']
                 csv_writer.writerow([business['id'], business['name'],
                                     business['url'], business['location']['city'],
                                     business['location']['zip_code'], 
                                     business['rating'],
                                     business['categories'],
-                                    price
+                                    price,
+                                    hours
                                     ])
         except:
             print("failed, moving on.")
