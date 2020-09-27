@@ -6,7 +6,6 @@ import json
 import csv
 import html
 import time
-import config
 
 def transform_link(x):
     return str(x) + "/review_feed"
