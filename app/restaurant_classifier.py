@@ -11,7 +11,7 @@ import gensim
 from gensim import corpora
 import spacy
 import re
-import lda_model_training as mp
+from app.lda_model_training import LDA_analysis
 import scipy.stats
 import matplotlib.pyplot as plt
 
@@ -25,33 +25,43 @@ restaurants_df = pd.read_csv(FILE_PATH_RESTAURANTS, index_col=0)
 print(reviews_df.shape)
 print(restaurants_df.shape)
 
-X_raw = reviews_df['comment']
-X_raw.apply(lambda x: x.replace('<br>', ''))
-y_raw = reviews_df['rating']
+# X_raw = reviews_df['comment']
+# X_raw.apply(lambda x: x.replace('<br>', '')).apply(lambda x: x.replace('<br', '')).apply(lambda x: x.replace('br>', ''))
+# y_raw = reviews_df['rating']
 
 with open('data/Restaurant_categorization.csv', mode='w') as csv_file:
     csv_writer = csv.writer(csv_file, delimiter='\t')
     csv_writer.writerow(['id', 'reviews', 'target', 'primary', 'secondary', 'tertiary'])
+
     #jon finished here
-    for i in range(20):
+    for i in range(len(restaurants_df)):
         try:
-            PARAMETERS['offset'] = i * 50
-            r = requests.get(url = ENDPOINT, params = PARAMETERS, headers=HEADERS)
-            json_loaded = json.loads(r.text)
-            print(len(json_loaded['businesses']))
-            if json_loaded['businesses'] is None or len(json_loaded['businesses']) < 1:
-                break
-            for business in json_loaded['businesses']:
-                price = ""
-                if 'price' in business.keys():
-                    price = business['price']
-                csv_writer.writerow([business['id'], business['name'],
-                                    business['url'], business['location']['city'],
-                                    business['location']['zip_code'], 
-                                    business['rating'],
-                                    business['categories'],
-                                    price
-                                    ])
+            bizID = restaurants_df.loc[i, 'id']
+            bizReviews = reviews_df.filter(like=bizID, axis=0)
+            dist_array = pd.DataFrame(columns=['category', 'probability'])
+
+            for j in range (len(bizReviews)):
+                distribution = LDA_analysis(bizReviews.loc[j, 'comment'])[1]
+                dist_array.append(pd.DataFrame(np.array(distribution, columns=['category', 'probability'])), ignore_index=True)
+
+            
+
+
+
+            # print(len(json_loaded['businesses']))
+            # if json_loaded['businesses'] is None or len(json_loaded['businesses']) < 1:
+            #     break
+            # for business in json_loaded['businesses']:
+            #     price = ""
+            #     if 'price' in business.keys():
+            #         price = business['price']
+            #     csv_writer.writerow([business['id'], business['name'],
+            #                         business['url'], business['location']['city'],
+            #                         business['location']['zip_code'], 
+            #                         business['rating'],
+            #                         business['categories'],
+            #                         price
+            #                         ])
         except:
             print("failed, moving on.")
             break

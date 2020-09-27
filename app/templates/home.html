@@ -14,14 +14,18 @@
         <h1 id="title"> AutoMATES </h1>
         <p> We help the BC Restaurant and Foodservices Association with providing valuable information and exclusive opportunities. </p>
     </div>
-    <form class="form-inline">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search by Name">
-            <span class="input-group-btn">
-                <button type="submit" id="search_button" class="btn btn-default">Search</button>
-            </span>
+    <form method='POST' action=''>
+        <div class="dropdown">
+            <select name='restaurants'>
+                {% for restaurant in restaurants %}
+                    <option value="{{restaurant}}"> {{restaurant}} </option>
+                {% endfor %}
+            </select>
         </div>
+
     </form>
+    
+    
 </body>
 
 
