@@ -5,10 +5,10 @@ We worked using python for both front and back end development on VSCode with li
 # Introduction
 The application has a number of functions.
 
-## Data mining and preprocessing – Gallant Tang
+## Data mining – Gallant Tang
 Gallant is responsible for creating the code used to mine data from Yelp's fusion API as well as other sources. We collected data on about 1000 restaurants in Vancouver and the reviews left by their customers.
 
-## Data analysis – Jon & Gallant
+## Data preprocessing and analysis – Jon & Gallant
 Gallant & Jon are responsible for fitting, transforming, and training the LDA and NLP model using gensim LDA, NLTK, and spaCy.
 We learned to create the `bag of words` through gensim for latent dirichlet analysis. Coherence testing and randomized search cv is used to fine tune parameters.
 
