@@ -3,7 +3,8 @@ import numpy as np
 import requests
 import json
 import csv
-import config
+from app import config
+
 # restaurant_name = []
 # restaurant_add = []
 # restaurant_cuisine = []

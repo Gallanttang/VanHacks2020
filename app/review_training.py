@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
 import nltk
 import gensim
+from gensim import corpora
 import spacy
 import re
 
@@ -15,41 +16,17 @@ import re
 #setting variables
 #APIKEY = HEADERS['Authorization']
 FILE_PATH = 'data/vancouver_reviews.csv'
-#assuming that the data features will be: ['businessID', 'userID', 'rating', 'review', 'time']
+#assuming that the data features will be: ['business_id', 'user_id', 'rating', 'comment', 'feedback', "time_uploaded"]
 
 #retrieving data
 # reviews_df = pd.read_csv(FILE_PATH, index_col=0)
 # print(reviews_df.shape)
-# X_raw = reviews_df['review']
-# y_raw = reviews_df['ratings']
+# X_raw = reviews_df['comment']
+# y_raw = reviews_df['rating']
 
 GOOD_RATING = 4
 y_raw = ['3.4','4', 'hella 3', '2 a3glsk2']
-
-
-X_raw = ["STRICKLAND: Good morning.",
-
-"Marsha is on her way. She called from the car phone I think. It sounded like the car phone, to let us know that she would be delayed.",
-
-"I would like to welcome two people who haven't been with us before.",
-
-"Suzanne Clewell, we're delighted to have you with us today. Suzanne, would you tell us a little bit about what you do?",
-
-"CLEWELL: Yes. I'm the Coordinator for Reading Language Arts with the Montgomery County Public Schools which is the suburban district surrounding Washington. We have 173 schools and 25 elementary schools.",
-
-"It's great to be here.",
-
-"STRICKLAND: And I'll skip over to another member of the committee, but for her, this is her first meeting, too, Judith Langer. I think we all know her work, if we didn't know her.",
-
-"Judith.",
-
-"LANGER: Hello. I'm delighted to be here.",
-
-"I have carefully read and heard about all of the things that the group has discussed up until now.",
-
-"I'm a Professor of Education at the University of Albany, the State University of New York. And I'm also the Director of the National Research Center on English Learning and Achievement.",
-
-"STRICKLAND: Her mother wrote the stances."]
+X_raw = ["STRICKLAND: Good morning.","Marsha is on her way. She called from the car phone I think. It sounded like the car phone, to let us know that she would be delayed.","I would like to welcome two people who haven't been with us before.","Suzanne Clewell, we're delighted to have you with us today. Suzanne, would you tell us a little bit about what you do?","CLEWELL: Yes. I'm the Coordinator for Reading Language Arts with the Montgomery County Public Schools which is the suburban district surrounding Washington. We have 173 schools and 25 elementary schools.","It's great to be here.","STRICKLAND: And I'll skip over to another member of the committee, but for her, this is her first meeting, too, Judith Langer. I think we all know her work, if we didn't know her.","Judith.","LANGER: Hello. I'm delighted to be here.","I have carefully read and heard about all of the things that the group has discussed up until now.","I'm a Professor of Education at the University of Albany, the State University of New York. And I'm also the Director of the National Research Center on English Learning and Achievement.","STRICKLAND: Her mother wrote the stances."]
 
 #cleaning the target data
 y = []
@@ -106,33 +83,40 @@ def prepare_text_for_lda(text):
     tokens = [get_lemma(token) for token in tokens]
     return tokens
 
+
+# to test what the tokens look like before applying LDA
 import random
 text_data = []
 for line in X_raw:
     tokens = prepare_text_for_lda(line)
-    
-    if random.random() > .99:
+
+    if random.random() > -1:
         print(tokens)
         text_data.append(tokens)
 
+
+#LDA with Gensim
 #from https://towardsdatascience.com/topic-modelling-in-python-with-nltk-and-gensim-4ef03213cd21
 
+dictionary = corpora.Dictionary(text_data)
+corpus = [dictionary.doc2bow(text) for text in text_data]
 
-# X = []
-# for i in X_raw:
-#     X.append(gensim.utils.simple_preprocess(i, deacc=True, min_len=3))
-# bigram = gensim.models.Phrases(X_raw)
-# stops = set(stopwords.words('english'))
+import pickle
+pickle.dump(corpus, open('corpus.pkl', 'wb'))
+dictionary.save('dictionary.gensim')
 
-# def process_texts(texts):
-#     texts = [[word for word in line if word not in stops] for line in texts]
-#     texts = [bigram[line] for line in texts]
-#     texts = [[word.decode("utf-8").split('/')[0] for word in lemmatize(' '.join(line), allowed_tags=re.compile('(NN)'), min_length=5)] for line in texts]
-#     return texts
+import gensim
+NUM_TOPICS = 5
+ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = NUM_TOPICS, id2word=dictionary, passes=15)
+ldamodel.save('model5.gensim')
+topics = ldamodel.print_topics(num_words=4)
+for topic in topics:
+    print(topic)
 
-# train_texts = process_texts(X_raw)
+def LDA_analysis(new_doc):
+    new_doc = prepare_text_for_lda(new_doc)
+    new_doc_bow = dictionary.doc2bow(new_doc)
+    print(new_doc_bow)
+    print(ldamodel.get_document_topics(new_doc_bow))
 
-# dictionary = Dictionary(train_texts)
-# corpus = [dictionary.doc2bow(text) for text in train_texts]
-# print(Dictionary)
-# print(corpus)
+LDA_analysis("STRICKLAND: Her mother wrote the stances.")
