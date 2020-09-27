@@ -5,7 +5,7 @@ We worked using python for both front and back end development on VSCode with li
 # Introduction
 The application has a number of functions.
 
-## Data mining – Gallant Tang
+## Data mining – Gallant
 Gallant is responsible for creating the code used to mine data from Yelp's fusion API as well as other sources. We collected data on about 1000 restaurants in Vancouver and the reviews left by their customers.
 
 ## Data preprocessing and analysis – Jon & Gallant
