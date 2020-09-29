@@ -13,8 +13,9 @@ The purpose of building topic models for restaurants was to determine how a rest
 Gallant is responsible for creating the code used to mine data from Yelp's fusion API as well as other sources. We collected data on about 1000 restaurants in Vancouver and the 50000++ reviews left by their customers.
 
 ## Data preprocessing and analysis – Jon & Gallant
-Gallant & Jon are responsible for fitting, transforming, and training the LDA and NLP model using gensim LDA, NLTK, and spaCy.
-We learned to create the `bag of words` through gensim for latent dirichlet analysis. Coherence testing and randomized search cv is used to fine tune parameters.
+Gallant & Jon are responsible for cleaning, fitting, transforming, and training the LDA and NLP model using gensim LDA, NLTK, and spaCy.
+We learned to create the `bag of words` through gensim for latent dirichlet analysis. 
+Coherence testing and randomized search cv is used to optimize hyperparameters.
 
 ## UI/UX – Gallant & Yen
 Yen & Gallant are responsible for developing the user interface. The application is created using Python Flask.
